@@ -5,6 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node index.js",
+    "db:schema": "psql -U postgres -h localhost -d world -f sql/schema.sql",
+    "db:seed": "psql -U postgres -h localhost -d world -f sql/seed.sql",
+    "db:all": "npm run db:schema && npm run db:seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

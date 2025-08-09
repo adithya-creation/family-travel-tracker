@@ -65,7 +65,7 @@ app.post("/add", async (req, res) => {
     const countryCode = data.country_code;
     try {
       await db.query(
-        "INSERT INTO visited_countries (country_code, user_id) VALUES ($1, $2)",
+        "INSERT INTO visited_countries (country_code, user_id) VALUES ($1, $2) ON CONFLICT ON CONSTRAINT unique_user_country DO NOTHING",
         [countryCode, currentUserId]
       );
       res.redirect("/");
@@ -91,9 +91,9 @@ app.post("/new", async (req, res) => {
   //https://www.postgresql.org/docs/current/dml-returning.html
   const newUsername = req.body["name"];
   const newUsercolor = req.body["color"];
-  const result = await db.query("INSERT INTO users (name, color) VALUES ($1, $2) RETURNING id;",[newUsername, newUsercolor]);
-  const userId = result.rows[0];
-  currentUserId = userId;  
+  const result = await db.query("INSERT INTO users (name, color) VALUES ($1, $2) RETURNING id;", [newUsername, newUsercolor]);
+  const userId = result.rows[0].id;
+  currentUserId = userId;
   res.redirect("/");
 });
 
